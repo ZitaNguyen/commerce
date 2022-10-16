@@ -1,0 +1,18 @@
+body {
+    padding: 10px;
+}
+
+a:link, a:visited {
+    text-decoration: none;
+    color: rgba(7, 7, 7, 0.709);
+}
+
+.img_container {
+    width: 700px;
+    height: 500px;
+}
+
+.img_container > img {
+    width: 100%;
+    height: auto;
+}
