@@ -94,15 +94,18 @@ def create_listing(request):
 
 
 def listing_page(request, listing_id):
-    if request.user.id is None:
+    if request.user is None:
         return redirect('login')
 
+    user_watchlist = Watchlist.objects.filter(user=request.user).first()
+
     return render(request, "auctions/listing_page.html", {
-        "listing": Listing.objects.get(id=listing_id)
+        "listing": Listing.objects.get(id=listing_id),
+        "user_watchlist": user_watchlist
         })
 
 
-def add_to_watchlist(request, listing_id):
+def toggle_watchlist(request, listing_id):
     if request.method == "POST":
         current_listing = Listing.objects.get(id=listing_id)
         user_watchlist = Watchlist.objects.filter(user=request.user).first()

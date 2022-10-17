@@ -8,14 +8,19 @@
         <img src="{{listing.image.url}}" class="card-img-top" alt="{{listing.image}}">
     </div>
     <div class="listing_info">
-        <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
+        {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
+        <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
             {% csrf_token %}
-            {% if listing not in user_watchlist.listings.all %}
-            <button type="submit" class="btn btn-primary mb-3 border-primary"><span class="bi bi-heart"> Add to Watchlist</span></button>
-            {% else %}
-            <button type="submit" class="btn btn-danger mb-3 border-danger"><span class="bi bi-heart-fill"> Remove from Watchlist</span></button>
-            {% endif %}
+            <button type="submit" class="btn btn-primary mb-3 border-primary"><span class="bi bi-heart"> Add to
+                    Watchlist</span></button>
         </form>
+        {% else %}
+        <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger mb-3 border-danger"><span class="bi bi-heart-fill"> Remove from
+                    Watchlist</span></button>
+        </form>
+        {% endif %}
         <p class="card-text">{{ listing.description }}</p>
         <small class="text-muted">$ {{ listing.starting_bid }}</small>
         <h4 class="mt-3">Details</h4>
