@@ -4,10 +4,12 @@
 <h2 class="mb-5">Listing: {{ listing.title }}</h2>
 
 <div class="d-flex">
+    <!-- Listing image -->
     <div class="img_container">
         <img src="{{listing.image.url}}" class="card-img-top" alt="{{listing.image}}">
     </div>
     <div class="listing_info">
+        <!-- Watchlist button -->
         {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
         <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
             {% csrf_token %}
@@ -21,9 +23,17 @@
                     Watchlist</span></button>
         </form>
         {% endif %}
+        <!-- Listing description -->
         <p class="card-text">{{ listing.description }}</p>
+        <!-- Listing bid -->
         <small class="text-muted">$ {{ listing.starting_bid }}</small>
-        <h4 class="mt-3">Details</h4>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" class="form-control my-3" placeholder="Bid">
+            <button type="submit" class="btn btn-primary border-primary">Place bid</button>
+        </form>
+        <!-- Listing details -->
+        <h4 class="mt-5">Details</h4>
         <ul>
             <li>Listed by: {{ listing.user }}</li>
             <li>Category: {{ listing.category }}</li>
