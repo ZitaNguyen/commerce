@@ -98,10 +98,11 @@ def listing_page(request, listing_id):
     if request.user is None:
         return redirect('login')
 
+    listing = Listing.objects.get(id=listing_id)
     user_watchlist = Watchlist.objects.filter(user=request.user).first()
 
     return render(request, "auctions/listing_page.html", {
-        "listing": Listing.objects.get(id=listing_id),
+        "listing": listing,
         "user_watchlist": user_watchlist
         })
 
@@ -131,28 +132,24 @@ def place_bid(request, listing_id):
     if request.method == "POST":
         bid = request.POST["bid"]
         listing = Listing.objects.get(id=listing_id)
-        listing_value = list(Listing.objects.filter(id=listing_id).values())
 
         # Check bid condition
-        if not 'current_bid_id' in listing_value[0] and int(bid) < listing_value[0]['starting_bid']:
+        if not listing.current_bid and int(bid) < listing.starting_bid:
             messages.warning(request, 'Your bid is smaller than the starting bid')
             return redirect('listing_page', listing_id=listing_id)
-        elif 'current_bid_id' in listing_value[0]:
-            current_bid_value = list(Bid.objects.filter(id=listing_value[0]['current_bid_id']).values())
-
-            if int(bid) <= current_bid_value[0]['bid']:
-                messages.warning(request, 'Your bid is equal or smaller than the current bid')
-                return redirect('listing_page', listing_id=listing_id)
+        elif int(bid) <= listing.current_bid.bid:
+            messages.warning(request, 'Your bid is equal or smaller than the current bid')
+            return redirect('listing_page', listing_id=listing_id)
 
         current_bid = Bid.objects.create(
                         user = request.user,
                         listing = listing,
                         bid = bid
                     )
-        print(current_bid)
+
         listing.bids.add(current_bid)
         listing.current_bid = current_bid
         listing.save()
 
-        messages.success(request, 'You have successfully bidded for %s!' % listing_value[0]['title'])
+        messages.success(request, 'You have successfully placed a bid for %s!' % listing.title)
         return redirect('listing_page', listing_id=listing_id)

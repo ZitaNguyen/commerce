@@ -17,8 +17,13 @@ a:link, a:visited {
     height: auto;
 }
 
-ul {
+.messages {
     list-style-type: none;
     padding: 0;
     margin: 0;
+}
+
+.bid_title {
+    width: 80px;
+    display: inline-block;
 }

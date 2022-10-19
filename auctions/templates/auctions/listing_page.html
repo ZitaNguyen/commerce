@@ -25,8 +25,14 @@
         {% endif %}
         <!-- Listing description -->
         <p class="card-text">{{ listing.description }}</p>
+        <!-- Listing bid prices-->
+        <small class="text-muted"><span class="bid_title">Starting bid:</span> $ {{ listing.starting_bid }}</small><br>
+        {% if not listing.current_bid %}
+        <small class="text-muted">No one have placed bids for this item yet.</small>
+        {% else %}
+        <small class="text-muted"><span class="bid_title">Current bid:</span> $ {{ listing.current_bid.bid }}</small>
+        {% endif %}
         <!-- Listing bid -->
-        <small class="text-muted">$ {{ listing.starting_bid }}</small>
         <form action="{% url 'place_bid' listing.id%}" method="post">
             {% csrf_token %}
             <input id="bid" type="text" name="bid" class="form-control my-3" placeholder="Bid">
