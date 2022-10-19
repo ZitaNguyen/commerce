@@ -32,12 +32,20 @@
         {% else %}
         <small class="text-muted"><span class="bid_title">Current bid:</span> $ {{ listing.current_bid.bid }}</small>
         {% endif %}
-        <!-- Listing bid -->
+        {% if listing.user != request.user %}
+        <!-- Place bid for listing -->
         <form action="{% url 'place_bid' listing.id%}" method="post">
             {% csrf_token %}
             <input id="bid" type="text" name="bid" class="form-control my-3" placeholder="Bid">
             <button type="submit" class="btn btn-primary border-primary">Place bid</button>
         </form>
+        {% else %}
+        <!-- Close bid -->
+        <form action="{% url 'close_bid' listing.id%}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary border-primary mt-3">Close bid</button>
+        </form>
+        {% endif %}
         <!-- Listing details -->
         <h4 class="mt-5">Details</h4>
         <ul>

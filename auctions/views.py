@@ -142,7 +142,7 @@ def place_bid(request, listing_id):
             return redirect('listing_page', listing_id=listing_id)
 
         current_bid = Bid.objects.create(
-                        user = request.user,
+                        bidder = request.user,
                         listing = listing,
                         bid = bid
                     )
@@ -153,3 +153,8 @@ def place_bid(request, listing_id):
 
         messages.success(request, 'You have successfully placed a bid for %s!' % listing.title)
         return redirect('listing_page', listing_id=listing_id)
+
+
+def close_bid(request, listing_id):
+    if request.method == "POST":
+        return redirect('listing_page', listing_id)

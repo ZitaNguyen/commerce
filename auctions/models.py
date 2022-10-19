@@ -29,12 +29,12 @@ class Category(models.Model):
 
 
 class Bid(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='bidder')
+    bidder = models.ForeignKey('User', on_delete=models.CASCADE, related_name='bidder')
     listing = models.ForeignKey('Listing', on_delete=models.CASCADE, related_name='listing_bidded')
     bid = models.IntegerField()
 
     def __str__(self):
-        return f"{self.listing, self.bid, self.user}"
+        return f"{self.listing, self.bid, self.bidder}"
 
 
 class Comment(models.Model):
