@@ -27,9 +27,9 @@
         <p class="card-text">{{ listing.description }}</p>
         <!-- Listing bid -->
         <small class="text-muted">$ {{ listing.starting_bid }}</small>
-        <form action="" method="post">
+        <form action="{% url 'place_bid' listing.id%}" method="post">
             {% csrf_token %}
-            <input type="text" class="form-control my-3" placeholder="Bid">
+            <input id="bid" type="text" name="bid" class="form-control my-3" placeholder="Bid">
             <button type="submit" class="btn btn-primary border-primary">Place bid</button>
         </form>
         <!-- Listing details -->
