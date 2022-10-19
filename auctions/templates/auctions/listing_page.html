@@ -3,6 +3,12 @@
 {% block body %}
 <h2 class="mb-5">Listing: {{ listing.title }}</h2>
 
+{% if request.user == listing.current_bid.bidder && !listing.active %}
+<div class="alert alert-success" role="alert">
+    You have won this auction!
+</div>
+{% endif %}
+
 <div class="d-flex">
     <!-- Listing image -->
     <div class="img_container">
