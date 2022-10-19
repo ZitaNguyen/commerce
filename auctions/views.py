@@ -155,6 +155,15 @@ def place_bid(request, listing_id):
         return redirect('listing_page', listing_id=listing_id)
 
 
-def close_bid(request, listing_id):
+def toggle_bid(request, listing_id):
     if request.method == "POST":
-        return redirect('listing_page', listing_id)
+        listing = Listing.objects.get(id=listing_id)
+        if listing.active:
+            listing.active = False
+            messages.info(request, 'This listing has been closed.')
+        else:
+            listing.active = True
+            messages.info(request, 'This listing has been reopened.')
+
+        listing.save(update_fields=['active'])
+        return redirect('listing_page', listing_id=listing_id)
