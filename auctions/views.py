@@ -137,7 +137,7 @@ def place_bid(request, listing_id):
         if not listing.current_bid and int(bid) < listing.starting_bid:
             messages.warning(request, 'Your bid is smaller than the starting bid')
             return redirect('listing_page', listing_id=listing_id)
-        elif int(bid) <= listing.current_bid.bid:
+        elif listing.current_bid and int(bid) <= listing.current_bid.bid:
             messages.warning(request, 'Your bid is equal or smaller than the current bid')
             return redirect('listing_page', listing_id=listing_id)
 
