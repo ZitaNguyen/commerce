@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Listing, User, Watchlist, Bid
+from .models import Category, Listing, User, Watchlist, Bid
 from .forms import ListingForm
 
 
@@ -167,3 +167,14 @@ def toggle_bid(request, listing_id):
 
         listing.save(update_fields=['active'])
         return redirect('listing_page', listing_id=listing_id)
+
+
+def category(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+
+def category_view(request, category_id):
+    return redirect('category')
