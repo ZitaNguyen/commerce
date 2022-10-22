@@ -13,6 +13,10 @@
     <!-- Listing image -->
     <div class="img_container">
         <img src="{{listing.image.url}}" class="card-img-top" alt="{{listing.image}}">
+        <div class="d-flex flex-column text-center text-muted mt-3">
+            <small>Listed by: {{ listing.user }}</small>
+            <small>Category: {{ listing.category }}</small>
+        </div>
     </div>
     <div class="listing_info">
         <!-- Watchlist button -->
@@ -49,7 +53,7 @@
         <!-- Close bid -->
         <form action="{% url 'toggle_bid' listing.id%}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary border-primary mt-3">Close bid</button>
+            <button type="submit" class="btn btn-secondary border-sebtn-secondary mt-3">Close bid</button>
         </form>
         {% else %}
         <!-- Reopen bid -->
@@ -58,12 +62,21 @@
             <button type="submit" class="btn btn-primary border-primary mt-3">Reopen bid</button>
         </form>
         {% endif %}
-        <!-- Listing details -->
-        <h4 class="mt-5">Details</h4>
-        <ul>
-            <li>Listed by: {{ listing.user }}</li>
-            <li>Category: {{ listing.category }}</li>
-        </ul>
+        <!-- Add comment -->
+        <h4 class="mt-5">Comments</h4>
+        <form action="{% url 'add_comment' listing.id%}" method="post">
+            {% csrf_token %}
+            <input id="comment" type="text" name="comment" class="form-control my-3" placeholder="Add your comment...">
+            <button type="submit" class="btn btn-secondary border-secondary">Add</button>
+        </form>
+        <!-- Show comments -->
+        {% if not listing.comments.all %}
+        <p>There is no comment yet.</p>
+        {% else %}
+            {% for comment in listing.comments.all %}
+                <p class="my-2"><span class="text-primary">{{comment.commenter}}</span>: <span class="text-secondary">{{ comment.comment }}</span></p>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

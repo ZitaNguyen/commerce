@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Category, Listing, User, Watchlist, Bid
+from .models import Category, Listing, User, Watchlist, Bid, Comment
 from .forms import ListingForm
 
 
@@ -159,7 +159,7 @@ def place_bid(request, listing_id):
                         bidder = request.user,
                         listing = listing,
                         bid = bid
-                    )
+        )
 
         listing.bids.add(current_bid)
         listing.current_bid = current_bid
@@ -180,6 +180,24 @@ def toggle_bid(request, listing_id):
             messages.info(request, 'This listing has been reopened.')
 
         listing.save(update_fields=['active'])
+        return redirect('listing_page', listing_id=listing_id)
+
+
+def add_comment(request, listing_id):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+        listing = Listing.objects.get(id=listing_id)
+
+        comment = Comment.objects.create(
+                    commenter = request.user,
+                    listing = listing,
+                    comment = comment
+        )
+
+        listing.comments.add(comment)
+        listing.save()
+
+        messages.success(request, 'Your comment has been successfully added!')
         return redirect('listing_page', listing_id=listing_id)
 
 
