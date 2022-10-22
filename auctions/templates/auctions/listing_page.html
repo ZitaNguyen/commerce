@@ -20,7 +20,7 @@
     </div>
     <div class="listing_info">
         <!-- Watchlist button -->
-        {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
+        {% if not user_watchlist.all or listing not in user_watchlist.all %}
         <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary mb-3 border-primary"><span class="bi bi-heart"> Add to
