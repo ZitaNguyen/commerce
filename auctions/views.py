@@ -99,18 +99,20 @@ def listing_page(request, listing_id):
         return redirect('login')
 
     listing = Listing.objects.get(id=listing_id)
-    user_watchlist = Watchlist.objects.filter(user=request.user).first()
+    user_watchlist = Watchlist.objects.get(user=request.user).listings
+    watchlist_count = user_watchlist.count()
 
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
-        "user_watchlist": user_watchlist
+        "user_watchlist": user_watchlist,
+        "watchlist_count": watchlist_count
         })
 
 
 def toggle_watchlist(request, listing_id):
     if request.method == "POST":
         current_listing = Listing.objects.get(id=listing_id)
-        user_watchlist = Watchlist.objects.filter(user=request.user).first()
+        user_watchlist = Watchlist.objects.get(user=request.user)
 
         if user_watchlist is None:
             user_watchlist = Watchlist.objects.create(user=request.user)
@@ -126,6 +128,18 @@ def toggle_watchlist(request, listing_id):
             user_watchlist.save()
 
         return redirect('listing_page', listing_id=listing_id)
+
+
+def watchlist(request):
+    watchlist = Watchlist.objects.get(user=request.user).listings.all()
+
+    if watchlist is None:
+        messages.info(request, 'Nothing has been added to watchlist.')
+        return HttpResponseRedirect(reverse("index"))
+
+    return render(request, "auctions/watchlist.html", {
+        "listings": watchlist
+    })
 
 
 def place_bid(request, listing_id):
