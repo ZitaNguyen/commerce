@@ -1,7 +1,8 @@
+from http.client import FOUND
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect, Http404, HttpResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 
@@ -131,14 +132,17 @@ def toggle_watchlist(request, listing_id):
 
 
 def watchlist(request):
-    watchlist = Watchlist.objects.get(user=request.user).listings.all()
+    try:
+        watchlist = Watchlist.objects.get(user=request.user)
+    except Watchlist.DoesNotExist:
+        watchlist = None
 
     if watchlist is None:
         messages.info(request, 'Nothing has been added to watchlist.')
         return HttpResponseRedirect(reverse("index"))
 
     return render(request, "auctions/watchlist.html", {
-        "listings": watchlist
+        "listings": watchlist.listings.all()
     })
 
 
