@@ -105,15 +105,9 @@ def listing_page(request, listing_id):
     except Watchlist.DoesNotExist:
         user_watchlist = None
 
-    if user_watchlist is not None:
-        watchlist_count = user_watchlist.listings.count()
-    else:
-        watchlist_count = 0
-
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
-        "user_watchlist": user_watchlist,
-        "watchlist_count": watchlist_count
+        "user_watchlist": user_watchlist
         })
 
 

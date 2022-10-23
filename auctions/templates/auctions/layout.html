@@ -44,12 +44,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a
-                class="nav-link page"
-                aria-current="page"
-                href="{% url 'index' %}"
-                >Active Listings</a
-              >
+              <a class="nav-link page active" href="{% url 'index' %}">Active Listings</a>
             </li>
             <li class="nav-item">
               <a class="nav-link page" href="{% url 'category' %}">Categories</a>
@@ -103,14 +98,14 @@
       crossorigin="anonymous"
     ></script>
 
-    <!-- <script>
-    const active_page = document.querySelector("#page")
-
-    document.querySelectorAll(".page a").foreach(function (link) {
-      if (link.href === window.location.href) {
-        link.classList.add("active");
+    <script>
+    document.querySelectorAll('.page').forEach((nav) => {
+      if (nav.pathname === window.location.pathname) {
+        nav.classList.add('active');
+      } else {
+        nav.classList.remove('active');
       }
     })
-  </script> -->
+  </script>
   </body>
 </html>
