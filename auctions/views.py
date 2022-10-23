@@ -213,11 +213,15 @@ def category(request):
 
 
 def category_view(request, category_id):
-    listings_of_same_category = Listing.objects.filter(category=category_id)
     category = Category.objects.get(id=category_id)
-
+    try:
+        listings_of_same_category = Listing.objects.get(category=category_id)
+    except Listing.DoesNotExist:
+        listings_of_same_category = None
+        
     if listings_of_same_category is None:
-        messages.info(request, 'No listing in this category')
+        messages.info(request, 'No listing in %s category' % category.name)
+        return redirect('category')
 
     return render(request, 'auctions/category_view.html', {
         "listings": listings_of_same_category,

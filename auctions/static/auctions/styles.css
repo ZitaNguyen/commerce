@@ -27,3 +27,14 @@ a:link, a:visited {
     width: 80px;
     display: inline-block;
 }
+
+/* Images in bootstrap's cards */
+.card-img-top {
+    width: 100%;
+    height: 25vw;
+    object-fit: cover;
+}
+
+.card-title {
+    text-transform: uppercase;
+}
