@@ -100,8 +100,15 @@ def listing_page(request, listing_id):
         return redirect('login')
 
     listing = Listing.objects.get(id=listing_id)
-    user_watchlist = Watchlist.objects.get(user=request.user).listings
-    watchlist_count = user_watchlist.count()
+    try:
+        user_watchlist = Watchlist.objects.get(user=request.user)
+    except Watchlist.DoesNotExist:
+        user_watchlist = None
+
+    if user_watchlist is not None:
+        watchlist_count = user_watchlist.listings.count()
+    else:
+        watchlist_count = 0
 
     return render(request, "auctions/listing_page.html", {
         "listing": listing,
@@ -113,7 +120,10 @@ def listing_page(request, listing_id):
 def toggle_watchlist(request, listing_id):
     if request.method == "POST":
         current_listing = Listing.objects.get(id=listing_id)
-        user_watchlist = Watchlist.objects.get(user=request.user)
+        try:
+            user_watchlist = Watchlist.objects.get(user=request.user)
+        except Watchlist.DoesNotExist:
+            user_watchlist = None
 
         if user_watchlist is None:
             user_watchlist = Watchlist.objects.create(user=request.user)
@@ -218,7 +228,7 @@ def category_view(request, category_id):
         listings_of_same_category = Listing.objects.get(category=category_id)
     except Listing.DoesNotExist:
         listings_of_same_category = None
-        
+
     if listings_of_same_category is None:
         messages.info(request, 'No listing in %s category' % category.name)
         return redirect('category')
