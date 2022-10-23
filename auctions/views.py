@@ -224,12 +224,9 @@ def category(request):
 
 def category_view(request, category_id):
     category = Category.objects.get(id=category_id)
-    try:
-        listings_of_same_category = Listing.objects.get(category=category_id)
-    except Listing.DoesNotExist:
-        listings_of_same_category = None
+    listings_of_same_category = Listing.objects.filter(category=category_id)
 
-    if listings_of_same_category is None:
+    if not listings_of_same_category:
         messages.info(request, 'No listing in %s category' % category.name)
         return redirect('category')
 

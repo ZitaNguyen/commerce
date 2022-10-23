@@ -1,5 +1,4 @@
 {% extends "auctions/layout.html" %}
-{% load static %}
 
 {% block body %}
 <h2 class="mb-5">Watchlist</h2>
@@ -12,17 +11,22 @@
                 <img src="{{listing.image.url}}" class="card-img-top" alt="{{listing.image}}">
                 <div class="card-body">
                     <h5 class="card-title">{{ listing.title }}</h5>
-                    <p class="card-text">{{ listing.category }}</p>
                     <p class="card-text">{{ listing.description }}</p>
+                    <small class="text-muted">Starting_bid: $ {{ listing.starting_bid }}</small>
                 </div>
-                <div class="card-footer">
-                    <small class="text-muted">Current bid: $
-                        {% if not listing.current_bid %}
-                            {{ listing.starting_bid }}
-                        {% else %}
-                            {{ listing.current_bid.bid }}
-                        {% endif %}
-                    </small>
+                <div class="card-footer d-flex justify-content-between">
+                    <!-- Current bid  -->
+                    {% if listing.current_bid is None %}
+                    <small class="text-muted">No bid</small>
+                    {% else %}
+                    <small class="text-muted">Current_bid: $ {{ listing.current_bid.bid }}</small>
+                    {% endif %}
+                    <!-- Listing state -->
+                    {% if listing.active %}
+                    <small class="text-primary">Active</small>
+                    {% else %}
+                    <small class="text-danger">Closed</small>
+                    {% endif %}
                 </div>
             </div>
         </a>
