@@ -141,9 +141,9 @@ def watchlist(request):
     except Watchlist.DoesNotExist:
         watchlist = None
 
-    if watchlist is None:
+    if watchlist is None or not watchlist.listings.all():
         messages.info(request, 'Nothing has been added to watchlist.')
-        return HttpResponseRedirect(reverse("index"))
+        return redirect('index')
 
     return render(request, "auctions/watchlist.html", {
         "listings": watchlist.listings.all()

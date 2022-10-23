@@ -11,14 +11,16 @@
 
 <div class="d-flex">
     <!-- Listing image -->
-    <div class="img_container">
-        <img src="{{listing.image.url}}" class="card-img-top" alt="{{listing.image}}">
-        <div class="d-flex flex-column text-center text-muted mt-3">
+    <div class="text-center">
+        <img src="{{listing.image.url}}" style="max-height: 500px; max-width: 500px;" alt="{{listing.image}}">
+        <div class="d-flex flex-column text-muted mt-3">
             <small>Listed by: {{ listing.user }}</small>
             <small>Category: {{ listing.category }}</small>
         </div>
     </div>
-    <div class="listing_info">
+
+    <!-- Listing information -->
+    <div class="listing_info ms-5">
         <!-- Watchlist button -->
         {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
         <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
@@ -34,7 +36,7 @@
         </form>
         {% endif %}
         <!-- Listing description -->
-        <p class="card-text">{{ listing.description }}</p>
+        <p>{{ listing.description }}</p>
         <!-- Listing bid prices-->
         <small class="text-muted"><span class="bid_title">Starting bid:</span> $ {{ listing.starting_bid }}</small><br>
         {% if not listing.current_bid %}
