@@ -4,8 +4,9 @@
 <h2 class="mb-5">Listing: {{ listing.title }}</h2>
 
 {% if request.user == listing.current_bid.bidder and listing.active == False %}
-<div class="alert alert-success" role="alert">
+<div class="alert alert-success alert-dismissible fade show" role="alert">
     You have won this auction!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endif %}
 
