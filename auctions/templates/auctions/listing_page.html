@@ -23,18 +23,22 @@
     <!-- Listing information -->
     <div class="listing_info ms-5">
         <!-- Watchlist button -->
-        {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
-        <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary mb-3 border-primary"><span class="bi bi-heart"> Add to
-                    Watchlist</span></button>
-        </form>
+        {% if not listing.active %}
+        <p class="display-4 text-danger"><strong>This auction is close</strong></p>
         {% else %}
-        <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger mb-3 border-danger"><span class="bi bi-heart-fill"> Remove from
-                    Watchlist</span></button>
-        </form>
+            {% if user_watchlist is None or listing not in user_watchlist.listings.all %}
+            <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary mb-3 border-primary"><span class="bi bi-heart"> Add to
+                        Watchlist</span></button>
+            </form>
+            {% else %}
+            <form action="{% url 'toggle_watchlist' listing.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger mb-3 border-danger"><span class="bi bi-heart-fill"> Remove from
+                        Watchlist</span></button>
+            </form>
+            {% endif %}
         {% endif %}
         <!-- Listing description -->
         <p>{{ listing.description }}</p>
@@ -45,25 +49,21 @@
         {% else %}
         <small class="text-muted"><span class="bid_title">Current bid:</span> $ {{ listing.current_bid.bid }}</small>
         {% endif %}
-        {% if listing.user != request.user and listing.active %}
         <!-- Place bid for listing -->
-        <form action="{% url 'place_bid' listing.id%}" method="post">
-            {% csrf_token %}
-            <input id="bid" type="text" name="bid" class="form-control my-3" placeholder="Bid">
-            <button type="submit" class="btn btn-primary border-primary">Place bid</button>
-        </form>
-        {% elif listing.user == request.user and listing.active %}
-        <!-- Close bid -->
-        <form action="{% url 'toggle_bid' listing.id%}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary border-sebtn-secondary mt-3">Close bid</button>
-        </form>
-        {% else %}
-        <!-- Reopen bid -->
-        <form action="{% url 'toggle_bid' listing.id%}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary border-primary mt-3">Reopen bid</button>
-        </form>
+        {% if listing.active %}
+            {% if listing.user != request.user%}
+            <form action="{% url 'place_bid' listing.id%}" method="post">
+                {% csrf_token %}
+                <input id="bid" type="text" name="bid" class="form-control my-3" placeholder="Bid">
+                <button type="submit" class="btn btn-primary border-primary">Place bid</button>
+            </form>
+            {% elif listing.user == request.user %}
+            <!-- Close bid -->
+            <form action="{% url 'close_bid' listing.id%}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary border-sebtn-secondary mt-3">Close bid</button>
+            </form>
+            {% endif %}
         {% endif %}
         <!-- Add comment -->
         <h4 class="mt-5">Comments</h4>
