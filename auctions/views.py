@@ -2,9 +2,10 @@ from http.client import FOUND
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import Category, Listing, User, Watchlist, Bid, Comment
 from .forms import ListingForm
@@ -69,6 +70,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@login_required
 def create_listing(request):
     if request.method == "POST":
         listing_form = ListingForm(request.POST, request.FILES)
@@ -95,6 +97,7 @@ def create_listing(request):
         return render(request, "auctions/create_listing.html", {'listing_form': listing_form})
 
 
+@login_required
 def listing_page(request, listing_id):
     if request.user is None:
         return redirect('login')
@@ -135,6 +138,7 @@ def toggle_watchlist(request, listing_id):
         return redirect('listing_page', listing_id=listing_id)
 
 
+@login_required
 def watchlist(request):
     try:
         watchlist = Watchlist.objects.get(user=request.user)
@@ -182,7 +186,7 @@ def close_bid(request, listing_id):
         listing = Listing.objects.get(id=listing_id)
         listing.active = False
         listing.save(update_fields=['active'])
-        
+
         messages.info(request, 'This listing has been closed.')
         return redirect('listing_page', listing_id=listing_id)
 
@@ -205,6 +209,7 @@ def add_comment(request, listing_id):
         return redirect('listing_page', listing_id=listing_id)
 
 
+@login_required
 def category(request):
     categories = Category.objects.all()
     return render(request, "auctions/categories.html", {
@@ -212,9 +217,10 @@ def category(request):
     })
 
 
+@login_required
 def category_view(request, category_id):
     category = Category.objects.get(id=category_id)
-    listings_of_same_category = Listing.objects.filter(category=category_id)
+    listings_of_same_category = Listing.objects.filter(category=category_id, active=True).order_by('id').reverse()
 
     if not listings_of_same_category:
         messages.info(request, 'No listing in %s category' % category.name)

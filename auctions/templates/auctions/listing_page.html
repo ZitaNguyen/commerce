@@ -61,7 +61,7 @@
             <!-- Close bid -->
             <form action="{% url 'close_bid' listing.id%}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary border-sebtn-secondary mt-3">Close bid</button>
+                <button type="submit" class="btn btn-secondary border-sebtn-secondary mt-3">Close auction</button>
             </form>
             {% endif %}
         {% endif %}
